@@ -1,13 +1,8 @@
 from typing import Union
+import uvicorn
 
 from fastapi import FastAPI
-from enum import Enum
-
-class ModelName(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
-
+from models import Item, ModelName, MojaData, external_data
 
 
 app = FastAPI()
@@ -20,15 +15,7 @@ async def main():
 
 @app.get("/blogs")
 async def blogs():
-    return {"data":
-        {
-            "1": "blog 1",
-            "2": "blog 2",
-            "3": "blog 3",
-            "4": "blog 4",
-            "5": "blog 5",
-        }
-    }
+    return MojaData(**external_data)
 
 
 @app.get("/blogs/{id}")
@@ -50,11 +37,16 @@ async def read_file(file_path: str):
     return {"file_path": file_path}
 
 
+@app.get("/items")
+async def create_items(item: Item):
+    return item
+
+
 @app.get("/items/{item_id}")
 async def get_item(item_id: str, q: Union[int, None] = None, short: bool = False):
     item = {"data": item_id}
     if q:
-        item.update({"q": q})
+        return item.update({"q": q})
     if not short:
         item.update({"description": "Jakis tam description, zobaczymy jak to wyjdzie.!?"})
     return item
@@ -63,3 +55,6 @@ async def get_item(item_id: str, q: Union[int, None] = None, short: bool = False
 async def get_item_item(item_id: str, needy: str):
     return {"data": item_id, "needy": needy}
 
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
