@@ -38,7 +38,7 @@ async def read_file(file_path: str):
 
 
 @app.get("/items")
-async def create_items(item: Item):
+async def create_items(item: Item = Item()):
     return item
 
 

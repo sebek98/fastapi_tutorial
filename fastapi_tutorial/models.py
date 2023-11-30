@@ -9,9 +9,9 @@ class ModelName(str, Enum):
 
 
 class Item(BaseModel):
-    name: str
-    description: Union[str, None] = None
-    price: float
+    name: str = "John Doe"
+    description: Union[str, None] = "Jeden ziomek farme mial"
+    price: float = 111222
     tax: Union[float, None] = None
 
 
